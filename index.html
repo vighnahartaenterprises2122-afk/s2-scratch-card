@@ -148,6 +148,84 @@ ctx.fill();
 });
 
 </script>
+<script type="module">
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+getDocs,
+doc,
+updateDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyDwf82MX79Ymh1_6tJGDa1VM-X5mEKM7kg",
+
+authDomain: "s2-fitness-scratchcard.firebaseapp.com",
+
+projectId: "s2-fitness-scratchcard",
+
+storageBucket: "s2-fitness-scratchcard.firebasestorage.app",
+
+messagingSenderId: "737078362451",
+
+appId: "1:737078362451:web:77e2b0878e3fe84f0461a6"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+async function loadReward(){
+
+const querySnapshot =
+await getDocs(collection(db, "scratchCards"));
+
+let available = [];
+
+querySnapshot.forEach((docSnap)=>{
+
+if(docSnap.data().used == false){
+
+available.push({
+id: docSnap.id,
+reward: docSnap.data().reward
+});
+
+}
+
+});
+
+if(available.length == 0){
+
+document.getElementById("rewardText").innerText =
+"NO REWARDS LEFT";
+
+return;
+
+}
+
+const selected =
+available[Math.floor(Math.random()*available.length)];
+
+document.getElementById("rewardText").innerText =
+selected.reward;
+
+await updateDoc(doc(db,"scratchCards",selected.id),{
+
+used:true
+
+});
+
+}
+
+loadReward();
+
+</script>
 </body>
 </html>
