@@ -59,7 +59,6 @@ left:0;
 </head>
 
 <body>
-    
 <div style="position:absolute;top:20px;color:white;text-align:center;width:100%;z-index:999;">
 
 <input
@@ -111,8 +110,7 @@ Verify & Scratch
 
 </div>
 
-<script>
-
+<script type="module">
 const canvas = document.getElementById("scratch");
 const ctx = canvas.getContext("2d");
 
@@ -223,6 +221,7 @@ alert("Verified Successfully");
 }
 </script>
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
