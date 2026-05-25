@@ -59,7 +59,45 @@ left:0;
 </head>
 
 <body>
+<div style="position:absolute;top:20px;color:white;text-align:center;width:100%;z-index:999;">
 
+<input
+type="text"
+id="phoneNumber"
+placeholder="+91XXXXXXXXXX"
+style="padding:10px;border-radius:10px;border:none;width:250px;"
+>
+
+<br><br>
+
+<button onclick="sendOTP()"
+style="padding:10px 20px;border:none;border-radius:10px;background:gold;font-weight:bold;">
+
+Send OTP
+
+</button>
+
+<br><br>
+
+<input
+type="text"
+id="otpCode"
+placeholder="Enter OTP"
+style="padding:10px;border-radius:10px;border:none;width:250px;"
+>
+
+<br><br>
+
+<button onclick="verifyOTP()"
+style="padding:10px 20px;border:none;border-radius:10px;background:gold;font-weight:bold;">
+
+Verify & Scratch
+
+</button>
+
+<div id="recaptcha-container"></div>
+
+</div>
 <div class="card">
 
 <div class="reward">
@@ -146,7 +184,42 @@ ctx.arc(x, y, 25, 0, Math.PI * 2);
 ctx.fill();
 
 });
+window.recaptchaVerifier =
+new RecaptchaVerifier(auth,
+'recaptcha-container',
+{
+size:'normal'
+});
 
+window.sendOTP = async function(){
+
+const phoneNumber =
+document.getElementById("phoneNumber").value;
+
+const appVerifier =
+window.recaptchaVerifier;
+
+window.confirmationResult =
+await signInWithPhoneNumber(
+auth,
+phoneNumber,
+appVerifier
+);
+
+alert("OTP Sent");
+
+}
+
+window.verifyOTP = async function(){
+
+const code =
+document.getElementById("otpCode").value;
+
+await window.confirmationResult.confirm(code);
+
+alert("Verified Successfully");
+
+}
 </script>
 <script type="module">
 
@@ -178,7 +251,14 @@ appId: "1:737078362451:web:77e2b0878e3fe84f0461a6"
 };
 
 const app = initializeApp(firebaseConfig);
+import {
+getAuth,
+RecaptchaVerifier,
+signInWithPhoneNumber
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+const auth = getAuth(app);
 const db = getFirestore(app);
 
 async function loadReward(){
